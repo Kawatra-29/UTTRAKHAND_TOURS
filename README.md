@@ -2,6 +2,8 @@
 
 A single-page React + Vite outstation fare calculator for Uttarakhand Tours and Travels. Road distance and drive time come from Geoapify Routing. Car rates live in the React source, and toll is shown separately.
 
+Contact links in the site header: phone/WhatsApp `+91 8745943464`, email `manishnotiyal92@gmail.com`.
+
 ## Run locally
 
 1. Install Node.js 20.19+ or 22.12+.

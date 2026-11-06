@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowDownUp, ArrowRight, Check, Clock3, Compass, MapPin, Mountain, Navigation, Route, ShieldCheck, X } from 'lucide-react'
+import { ArrowDownUp, ArrowRight, Check, Clock3, Compass, Mail, MapPin, MessageCircle, Mountain, Navigation, Phone, Route, ShieldCheck, X } from 'lucide-react'
 import { BRAND_NAME, vehicles as initialVehicles } from './data/vehicles.js'
 import { getRoadRoute, hasGeoapifyKey, searchPlaces } from './services/geoapifyService.js'
 import { calculateFare, formatINR } from './utils/fareCalculator.js'
@@ -96,7 +96,7 @@ export default function App() {
   }
 
   return <div className="app-shell">
-    <header className="topbar"><a className="brand" href="#top" aria-label={`${BRAND_NAME} home`}><span className="brand-mark"><Mountain size={21} strokeWidth={2.4}/></span><span>{BRAND_NAME}<small>UTTARAKHAND • OUTSTATION TAXI FARES</small></span></a><div className="topbar-note"><ShieldCheck size={16}/> Clear trip estimates</div></header>
+    <header className="topbar"><a className="brand" href="#top" aria-label={`${BRAND_NAME} home`}><span className="brand-mark"><Mountain size={21} strokeWidth={2.4}/></span><span>{BRAND_NAME}<small>UTTARAKHAND • OUTSTATION TAXI FARES</small></span></a><div className="header-actions"><div className="topbar-note"><ShieldCheck size={16}/> Clear trip estimates</div><a className="contact-link" href="tel:+918745943464"><Phone size={15}/> +91 87459 43464</a><a className="email-link" href="mailto:manishnotiyal92@gmail.com"><Mail size={15}/> manishnotiyal92@gmail.com</a><a className="whatsapp-link" href="https://wa.me/918745943464" target="_blank" rel="noreferrer"><MessageCircle size={15}/> WhatsApp</a></div></header>
     <main id="top">
       <section className="hero"><div className="hero-content"><div className="eyebrow"><span/> UTTARAKHAND TOURS &amp; TRAVELS</div><h1>Explore the hills.<br/><em>Travel with clarity.</em></h1><p>Plan your Uttarakhand outstation journey with real road distance and transparent car-wise fares.</p></div><div className="hero-art" aria-hidden="true"><div className="art-sun"/><div className="art-hill hill-back"/><div className="art-hill hill-front"/><div className="art-road"/><div className="art-car"><div className="art-window"/><i/><b/></div><div className="art-pin"><MapPin size={16}/></div></div></section>
       {!hasGeoapifyKey() && <div className="config-notice"><Compass size={17}/><span><strong>Connect location search</strong> Add a Geoapify key in <code>.env.local</code> to enable address suggestions and road routing.</span></div>}

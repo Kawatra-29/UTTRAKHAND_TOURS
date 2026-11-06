@@ -1,0 +1,1 @@
+The app uses a consistent local illustration placeholder for all vehicle cards until the owner supplies exact, licensed vehicle photos. Add/replace photos in this folder using each vehicle's image filename (for example swift.webp, dzire.webp, innova-hycross.webp); the app automatically uses the placeholder if a file is missing.

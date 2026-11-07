@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowDownUp, ArrowRight, Check, Clock3, Compass, Mail, MapPin, MessageCircle, Mountain, Navigation, Phone, Route, ShieldCheck, X } from 'lucide-react'
-import { BRAND_NAME, vehicles as initialVehicles } from './data/vehicles.js'
+import { BRAND_NAME } from './data/vehicles.js'
 import { getRoadRoute, hasGeoapifyKey, searchPlaces } from './services/geoapifyService.js'
-import { calculateFare, formatINR } from './utils/fareCalculator.js'
 
 function PlaceInput({ id, label, placeholder, icon: Icon, value, setValue, selected, setSelected, error }) {
   const [suggestions, setSuggestions] = useState([])
@@ -51,20 +50,23 @@ function formatDuration(seconds) {
   return hours ? `${hours} hr ${minutes} min` : `${minutes} min`
 }
 
+const vehicleCategories = [
+  { id: 'sedan', name: 'Sedan', models: ['Dzire', 'Aura', 'Amaze', 'Etios'] },
+  { id: 'muv', name: 'MUV', models: ['Innova Crysta', 'Innova Hycross', 'Ertiga', 'Carens', 'Rumion'] },
+  { id: 'traveller', name: 'Tempo Traveller', models: ['Force Traveller 9 seater', 'Force Traveller 12 seater', 'Force Traveller 17 seater'] },
+]
+
 export default function App() {
-  const vehicles = initialVehicles
   const [pickup, setPickup] = useState(''); const [destination, setDestination] = useState('')
   const [pickupPlace, setPickupPlace] = useState(null); const [destinationPlace, setDestinationPlace] = useState(null)
   const [route, setRoute] = useState(null); const [routeError, setRouteError] = useState(''); const [routeLoading, setRouteLoading] = useState(false)
-  const [selectedId, setSelectedId] = useState(''); const [tollText, setTollText] = useState('')
+  const [selectedCategoryId, setSelectedCategoryId] = useState(''); const [selectedModel, setSelectedModel] = useState(''); const [carrier, setCarrier] = useState('without')
   const [shortcutLoading, setShortcutLoading] = useState('')
   const [formErrors, setFormErrors] = useState({})
 
-  const selectedVehicle = vehicles.find((vehicle) => vehicle.id === selectedId)
-  const tollAmount = tollText.trim() === '' ? null : Number(tollText)
-  const fare = useMemo(() => route && selectedVehicle?.ratePerKm ? calculateFare({ distanceKm: route.distanceKm, ratePerKm: selectedVehicle.ratePerKm, tollAmount: Number.isFinite(tollAmount) && tollAmount >= 0 ? tollAmount : null }) : null, [route, selectedVehicle, tollAmount])
+  const selectedCategory = vehicleCategories.find((category) => category.id === selectedCategoryId)
 
-  const invalidateRoute = () => { setRoute(null); setRouteError(''); setSelectedId(''); setTollText('') }
+  const invalidateRoute = () => { setRoute(null); setRouteError(''); setSelectedCategoryId(''); setSelectedModel('') }
   const changePickup = (value) => { setPickup(value); setPickupPlace(null); invalidateRoute(); setFormErrors((e) => ({ ...e, pickup: '' })) }
   const changeDestination = (value) => { setDestination(value); setDestinationPlace(null); invalidateRoute(); setFormErrors((e) => ({ ...e, destination: '' })) }
   const swapPlaces = () => {
@@ -79,12 +81,12 @@ export default function App() {
     else if (!destinationPlace) errors.destination = 'Choose a location from the suggestions.'
     setFormErrors(errors)
     if (Object.keys(errors).length) return
-    setRouteLoading(true); setRoute(null); setSelectedId(''); setTollText('')
+    setRouteLoading(true); setRoute(null); setSelectedCategoryId(''); setSelectedModel('')
     try { setRoute(await getRoadRoute(pickupPlace, destinationPlace)) }
     catch (error) { setRouteError(error.message) }
     finally { setRouteLoading(false) }
   }
-  const selectVehicle = (id) => { setSelectedId(id) }
+  const selectCategory = (category) => { setSelectedCategoryId(category.id); setSelectedModel(category.models[0]) }
   const selectShortcut = async (placeName) => {
     setShortcutLoading(placeName); setRouteError('')
     try {
@@ -98,7 +100,7 @@ export default function App() {
   return <div className="app-shell">
     <header className="topbar"><a className="brand" href="#top" aria-label={`${BRAND_NAME} home`}><span className="brand-mark"><Mountain size={21} strokeWidth={2.4}/></span><span>{BRAND_NAME}<small>UTTARAKHAND • OUTSTATION TAXI FARES</small></span></a><div className="header-actions"><div className="topbar-note"><ShieldCheck size={16}/> Clear trip estimates</div><a className="contact-link" href="tel:+918745943464"><Phone size={15}/> +91 87459 43464</a><a className="email-link" href="mailto:manishnotiyal92@gmail.com"><Mail size={15}/> manishnotiyal92@gmail.com</a><a className="whatsapp-link" href="https://wa.me/918745943464" target="_blank" rel="noreferrer"><MessageCircle size={15}/> WhatsApp</a></div></header>
     <main id="top">
-      <section className="hero"><div className="hero-content"><div className="eyebrow"><span/> UTTARAKHAND TOURS &amp; TRAVELS</div><h1>Explore the hills.<br/><em>Travel with clarity.</em></h1><p>Plan your Uttarakhand outstation journey with real road distance and transparent car-wise fares.</p></div><div className="hero-art" aria-hidden="true"><div className="art-sun"/><div className="art-hill hill-back"/><div className="art-hill hill-front"/><div className="art-road"/><div className="art-car"><div className="art-window"/><i/><b/></div><div className="art-pin"><MapPin size={16}/></div></div></section>
+      <section className="hero"><div className="hero-content"><div className="eyebrow"><span/> UTTARAKHAND TOURS &amp; TRAVELS</div><h1>Explore the hills.<br/><em>Travel with clarity.</em></h1><p>Plan your Uttarakhand outstation journey with real road distance and transparent category-wise fares.</p></div><div className="hero-art" aria-hidden="true"><div className="art-sun"/><div className="art-hill hill-back"/><div className="art-hill hill-front"/><div className="art-road"/><div className="art-car"><div className="art-window"/><i/><b/></div><div className="art-pin"><MapPin size={16}/></div></div></section>
       {!hasGeoapifyKey() && <div className="config-notice"><Compass size={17}/><span><strong>Connect location search</strong> Add a Geoapify key in <code>.env.local</code> to enable address suggestions and road routing.</span></div>}
       <section className="search-card" aria-labelledby="trip-heading">
         <div className="section-heading"><div><span className="step-label">01 / YOUR ROUTE</span><h2 id="trip-heading">Where are you headed?</h2></div><span className="india-chip"><MapPin size={14}/> Search across India</span></div>
@@ -111,25 +113,20 @@ export default function App() {
       </section>
       {route && <section className="route-strip" aria-live="polite"><div className="route-stops"><div className="stop-dot"/><span>{route.fromLabel}</span><span className="route-line"/><div className="stop-dot end"/><span>{route.toLabel}</span></div><div className="route-metrics"><div><strong>{route.distanceKm.toFixed(2)} <small>km</small></strong><span>ROAD DISTANCE</span></div>{formatDuration(route.durationSeconds) && <div><strong><Clock3 size={15}/>{formatDuration(route.durationSeconds)}</strong><span>EST. DRIVE TIME</span></div>}</div></section>}
 
-      <section className="vehicles-section"><div className="section-heading vehicle-heading"><div><span className="step-label">02 / CHOOSE YOUR CAR</span><h2>Pick your ride</h2><p>{route ? 'Rates are shown for this route. Choose a model to calculate your estimate.' : 'Enter your pickup and destination to see the cars and their rates.'}</p></div></div>
-        {!route ? <div className="vehicles-locked"><Route size={18}/><span>Car rates appear after you enter your trip locations and calculate the route.</span></div> : <div className="vehicle-grid">{vehicles.map((vehicle) => {
-          const selected = selectedId === vehicle.id, available = Number.isFinite(vehicle.ratePerKm) && vehicle.ratePerKm > 0
-          return <article key={vehicle.id} className={`vehicle-card ${selected ? 'selected' : ''} ${!available ? 'unpriced' : ''}`}>
-            <div className="car-image"><img src={vehicle.image} alt={`${vehicle.name} photo`} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/cars/car-placeholder.svg'; e.currentTarget.alt = `${vehicle.name} — local replaceable placeholder` }}/>{selected && <span className="selected-pill"><Check size={13}/> Selected</span>}</div>
-            <div className="vehicle-info"><h3>{vehicle.name}</h3><div className="rate-line">{available ? <><strong>{formatINR(vehicle.ratePerKm)}</strong><span> / km</span></> : <span className="unconfigured">Rate unavailable</span>}</div>
-              {selected && route && fare && <div className="card-fare"><span>Base fare</span><strong>{formatINR(fare.baseFare)}</strong></div>}
-              <button type="button" className={`select-button ${selected ? 'chosen' : ''}`} disabled={!available || !route} onClick={() => selectVehicle(vehicle.id)}>{selected ? <><Check size={15}/> Selected</> : !available ? 'Rate needed' : !route ? 'Calculate route first' : <>Select car <ArrowRight size={15}/></>}</button>
-            </div>
+      <section className="vehicles-section"><div className="section-heading vehicle-heading"><div><span className="step-label">02 / CHOOSE A CATEGORY</span><h2>Pick your ride</h2><p>{route ? 'Choose a vehicle category and tell us whether you need a roof carrier.' : 'Enter your pickup and destination to see vehicle categories.'}</p></div></div>
+        {!route ? <div className="vehicles-locked"><Route size={18}/><span>Vehicle categories appear after you calculate your route.</span></div> : <div className="category-grid">{vehicleCategories.map((category) => {
+          const selected = selectedCategoryId === category.id
+          return <article key={category.id} className={`category-card ${selected ? 'selected' : ''}`}>
+            <button type="button" className="category-select" aria-pressed={selected} onClick={() => selectCategory(category)}><span className="category-icon">{category.name === 'Sedan' ? 'S' : category.name === 'MUV' ? 'M' : 'T'}</span><span className="category-title"><strong>{category.name}</strong><small>{category.id === 'traveller' ? '9, 12 or 17 seater' : 'Choose a model'}</small></span>{selected && <Check size={17} aria-label="Selected"/>}</button>
+            <p className="model-list"><strong>Models</strong>{category.models.join(' · ')}</p>
+            {selected && <div className="category-options"><label htmlFor="vehicle-model">Select model</label><select id="vehicle-model" value={selectedModel} onChange={(event) => setSelectedModel(event.target.value)}>{category.models.map((model) => <option key={model}>{model}</option>)}</select><fieldset className="carrier-choice"><legend>Roof carrier</legend><label><input type="radio" name="carrier" value="with" checked={carrier === 'with'} onChange={() => setCarrier('with')}/> With carrier</label><label><input type="radio" name="carrier" value="without" checked={carrier === 'without'} onChange={() => setCarrier('without')}/> Without carrier</label></fieldset></div>}
           </article>
         })}</div>}
-        {route && vehicles.every((v) => !v.ratePerKm) && <div className="hint-bar"><Route size={16}/><span>Car rates are not set yet. Add your approved rates in <code>src/data/vehicles.js</code> before publishing.</span></div>}
       </section>
 
-      {route && <section className="quote-section"><div className="quote-heading"><div><span className="step-label">03 / YOUR ESTIMATE</span><h2>Fare breakdown</h2></div><span className="estimate-tag"><ShieldCheck size={14}/> ESTIMATE</span></div>
-        {!selectedVehicle ? <div className="quote-empty"><div className="empty-icon"><Route size={21}/></div><div><strong>Select a car to see your fare</strong><span>Choose a model with a configured rate above.</span></div></div> : <div className="quote-body"><div className="quote-details"><div className="quote-row"><span>Actual road distance</span><strong>{route.distanceKm.toFixed(2)} km</strong></div><div className="quote-row"><span>Selected car</span><strong>{selectedVehicle.name}</strong></div><div className="quote-row"><span>Rate per kilometre</span><strong>{formatINR(selectedVehicle.ratePerKm)} / km</strong></div><div className="quote-row"><span>Base fare <small>({route.distanceKm.toFixed(2)} km × {formatINR(selectedVehicle.ratePerKm)})</small></span><strong>{formatINR(fare.baseFare)}</strong></div>
-          <div className="toll-row"><label htmlFor="toll">Toll tax <small>{tollAmount === null ? 'Excluded from base fare' : 'Manually entered estimate'}</small></label><div className="toll-input"><span>₹</span><input id="toll" type="number" min="0" step="0.01" inputMode="decimal" placeholder="Optional estimate" value={tollText} onChange={(e) => setTollText(e.target.value)} aria-describedby="toll-help"/><span>INR</span></div></div><p className="toll-help" id="toll-help">Toll is excluded from the per-km fare and paid separately at toll plazas during the journey. Enter an estimate here only if you want it included in the total estimate.</p>
-          {tollText !== '' && (!Number.isFinite(tollAmount) || tollAmount < 0) && <p className="field-error">Enter a valid toll amount of ₹0 or more.</p>}
-        </div><div className="total-panel">{fare.totalFare === null ? <><span className="total-kicker">BASE FARE</span><strong>{formatINR(fare.baseFare)}</strong><p>Toll not included yet. Enter or confirm the toll amount to see your estimated total.</p></> : <><span className="total-kicker">FINAL ESTIMATED FARE</span><strong>{formatINR(fare.totalFare)}</strong><p>{formatINR(fare.baseFare)} base fare + {formatINR(tollAmount)} toll tax</p></>}<span className="quote-disclaimer"><ShieldCheck size={14}/> Estimate based on the selected route and rate</span></div></div>}
+      {route && <section className="quote-section"><div className="quote-heading"><div><span className="step-label">03 / YOUR REQUEST</span><h2>Trip summary</h2></div><span className="estimate-tag"><ShieldCheck size={14}/> FARE ON REQUEST</span></div>
+        {!selectedCategory ? <div className="quote-empty"><div className="empty-icon"><Route size={21}/></div><div><strong>Select a vehicle category</strong><span>Choose a category above to confirm your model and carrier preference.</span></div></div> : <div className="quote-body"><div className="quote-details"><div className="quote-row"><span>Actual road distance</span><strong>{route.distanceKm.toFixed(2)} km</strong></div><div className="quote-row"><span>Selected category</span><strong>{selectedCategory.name}</strong></div><div className="quote-row"><span>Selected model</span><strong>{selectedModel}</strong></div><div className="quote-row"><span>Roof carrier</span><strong>{carrier === 'with' ? 'With carrier' : 'Without carrier'}</strong></div>
+        </div><div className="total-panel"><span className="total-kicker">FARE QUOTE</span><strong>On request</strong><p>We'll confirm the fare for this route, selected vehicle and carrier preference.</p><a className="quote-contact" href={`https://wa.me/918745943464?text=${encodeURIComponent(`Hello, please share a fare quote. Pickup: ${route.fromLabel}; destination: ${route.toLabel}; category: ${selectedCategory.name}; model: ${selectedModel}; roof carrier: ${carrier === 'with' ? 'With carrier' : 'Without carrier'}; road distance: ${route.distanceKm.toFixed(2)} km.`)}`} target="_blank" rel="noreferrer">Request on WhatsApp <ArrowRight size={15}/></a><span className="quote-disclaimer"><ShieldCheck size={14}/> Route and preferences included</span></div></div>}
       </section>}
       <footer className="footer"><span>© {new Date().getFullYear()} {BRAND_NAME}</span><span>Safar ki taiyaari, fare ki clarity.</span></footer>
     </main>

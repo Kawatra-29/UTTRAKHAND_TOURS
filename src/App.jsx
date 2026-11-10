@@ -101,7 +101,7 @@ export default function App() {
   return <div className="app-shell">
     <header className="topbar"><a className="brand" href="#top" aria-label={`${BRAND_NAME} home`}><span className="brand-mark"><Mountain size={21} strokeWidth={2.4}/></span><span>{BRAND_NAME}<small>ALL INDIA • OUTSTATION TAXI SERVICE</small></span></a><div className="header-actions"><div className="topbar-note"><Award size={16}/> 12+ Years of Trusted Travel</div><a className="contact-link" href="tel:+918745943464"><Phone size={15}/> +91 87459 43464</a><a className="email-link" href="mailto:manishnotiyal92@gmail.com"><Mail size={15}/> manishnotiyal92@gmail.com</a><a className="whatsapp-link" href="https://wa.me/918745943464" target="_blank" rel="noreferrer"><MessageCircle size={15}/> WhatsApp</a></div></header>
     <main id="top">
-      <section className="hero"><div className="hero-content"><div className="eyebrow"><span/> NOTIYAL TOURS &amp; TRAVELS · 12+ YRS OF TRUST</div><h1>Travel anywhere in India.<br/><em>Outstation cabs with clarity.</em></h1><p>12+ years of trusted outstation taxi service across India. Doorstep pickup, experienced commercial drivers, and transparent category-wise fares.</p></div><div className="hero-art" aria-hidden="true"><div className="art-sun"/><div className="art-hill hill-back"/><div className="art-hill hill-front"/><div className="art-road"/><div className="art-car"><div className="art-window"/><i/><b/></div><div className="art-pin"><MapPin size={16}/></div></div></section>
+      <section className="hero"><div className="hero-content"><div className="eyebrow"><span/> NAUTIYAL TOURS &amp; TRAVELS · 12+ YRS OF TRUST</div><h1>Travel anywhere in India.<br/><em>Outstation cabs with clarity.</em></h1><p>12+ years of trusted outstation taxi service across India. Doorstep pickup, experienced commercial drivers, and transparent category-wise fares.</p></div><div className="hero-art" aria-hidden="true"><div className="art-sun"/><div className="art-hill hill-back"/><div className="art-hill hill-front"/><div className="art-road"/><div className="art-car"><div className="art-window"/><i/><b/></div><div className="art-pin"><MapPin size={16}/></div></div></section>
       {!hasGeoapifyKey() && <div className="config-notice"><Compass size={17}/><span><strong>Connect location search</strong> Add a Geoapify key in <code>.env.local</code> to enable address suggestions and road routing.</span></div>}
       <section className="search-card" aria-labelledby="trip-heading">
         <div className="section-heading"><div><span className="step-label">01 / YOUR ROUTE</span><h2 id="trip-heading">Where are you headed?</h2></div><span className="india-chip"><MapPin size={14}/> Search across India</span></div>
@@ -181,7 +181,7 @@ export default function App() {
         })()}
       </section>}
       <section className="features-section" aria-labelledby="features-heading">
-        <div className="section-heading"><div><span className="step-label">TRUST &amp; EXPERIENCE</span><h2 id="features-heading">Why Choose Notiyal Tours &amp; Travels?</h2></div></div>
+        <div className="section-heading"><div><span className="step-label">TRUST &amp; EXPERIENCE</span><h2 id="features-heading">Why Choose Nautiyal Tours &amp; Travels?</h2></div></div>
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon"><Award size={18}/></div>

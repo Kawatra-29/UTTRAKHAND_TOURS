@@ -13,4 +13,4 @@ export const vehicles = [
   { id: 'innova-hycross', name: 'Toyota Innova Hycross', image: '/cars/innova-hycross.webp', ratePerKm: null },
 ]
 
-export const BRAND_NAME = 'NOTIYAL TOURS AND TRAVELS'
+export const BRAND_NAME = 'NAUTIYAL TOURS AND TRAVELS'

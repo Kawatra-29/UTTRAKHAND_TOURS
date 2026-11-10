@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowDownUp, ArrowRight, Award, Check, Clock3, Compass, Mail, MapPin, MessageCircle, Mountain, Navigation, Phone, Route, ShieldCheck, X } from 'lucide-react'
+import { ArrowDownUp, ArrowRight, Award, Check, Clock3, Compass, HelpCircle, Mail, MapPin, MessageCircle, Mountain, Navigation, Phone, Route, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { BRAND_NAME } from './data/vehicles.js'
 import { getRoadRoute, hasGeoapifyKey, searchPlaces } from './services/geoapifyService.js'
 import { formatINR } from './utils/fareCalculator.js'
@@ -180,6 +180,54 @@ export default function App() {
           </div>
         })()}
       </section>}
+      <section className="features-section" aria-labelledby="features-heading">
+        <div className="section-heading"><div><span className="step-label">TRUST &amp; EXPERIENCE</span><h2 id="features-heading">Why Choose Notiyal Tours &amp; Travels?</h2></div></div>
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon"><Award size={18}/></div>
+            <h3>12+ Years Trust</h3>
+            <p>Over a decade of reliable outstation car rental and intercity travel experience across India.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon"><Sparkles size={18}/></div>
+            <h3>Transparent Per-KM Fare</h3>
+            <p>Fixed rates starting at ₹10/km for Sedan and ₹14/km for MUV with zero hidden platform charges.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon"><MapPin size={18}/></div>
+            <h3>Pan-India Service</h3>
+            <p>Doorstep pickup and drop available across all states, tourist circuits, and hill destinations.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon"><ShieldCheck size={18}/></div>
+            <h3>Verified Drivers</h3>
+            <p>Professional, polite, commercial drivers experienced in highway and mountain terrain driving.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="faq-section" aria-labelledby="faq-heading">
+        <div className="section-heading"><div><span className="step-label">FREQUENTLY ASKED QUESTIONS</span><h2 id="faq-heading">Outstation Cab Booking FAQs</h2></div></div>
+        <div className="faq-grid">
+          <div className="faq-item">
+            <h3>How is the outstation cab fare calculated?</h3>
+            <p>Our fare is calculated using actual road distance multiplied by the vehicle category rate: ₹10/km for Sedan (Dzire, Aura) and ₹14/km for MUV (Innova, Ertiga).</p>
+          </div>
+          <div className="faq-item">
+            <h3>Are toll taxes and parking charges included?</h3>
+            <p>The estimated fare covers vehicle hire and fuel. Toll taxes, state border entry permits, and parking are payable directly as per actual receipts during journey.</p>
+          </div>
+          <div className="faq-item">
+            <h3>Can I book cabs for one-way drops as well as round trips?</h3>
+            <p>Yes, we cater to both one-way outstation drops and multi-day round trip journeys anywhere across India with custom travel itineraries.</p>
+          </div>
+          <div className="faq-item">
+            <h3>How do I confirm my cab booking?</h3>
+            <p>Calculate your trip fare online and tap "Book on WhatsApp". Our team will instantly verify driver availability and confirm your booking details.</p>
+          </div>
+        </div>
+      </section>
+
       <footer className="footer"><span>© {new Date().getFullYear()} {BRAND_NAME}</span><span>Safar ki taiyaari, fare ki clarity.</span></footer>
     </main>
   </div>

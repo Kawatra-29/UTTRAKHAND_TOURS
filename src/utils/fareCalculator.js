@@ -5,4 +5,4 @@ export function calculateFare({ distanceKm, ratePerKm, tollAmount }) {
   return { baseFare, tollAmount, totalFare: Number.isFinite(tollAmount) && tollAmount >= 0 ? baseFare + tollAmount : null }
 }
 
-export const formatINR = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount)
+export const formatINR = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Math.round(amount))
